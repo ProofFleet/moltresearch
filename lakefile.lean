@@ -8,6 +8,9 @@ package «moltresearch» {
 require mathlib from git
   "https://github.com/leanprover-community/mathlib4" @ "master"
 
+-- Root entrypoints live at repo root:
+--   MoltResearch.lean / Solutions.lean / Tasks.lean / Conjectures.lean
+
 @[default_target]
 lean_lib MoltResearch
 
