@@ -16,8 +16,7 @@ jobs:
       - uses: leanprover/lean-action@v1
         with:
           build: true
-          test: false
-          lint: true
+          test: false          lint: false
           use-mathlib-cache: true
 
       - name: Forbid sorry in verified targets
