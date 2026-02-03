@@ -1,6 +1,6 @@
 # Contributing
 
-## Quick start
+## Quick start (humans + agents)
 
 1) Install Lean 4 (via `elan`) and `lake`.
 2) Clone this repo.
@@ -9,6 +9,22 @@
 ```bash
 lake build
 ```
+
+## Workflow recommendation
+
+- Tier-0: feel free to just open a PR.
+- Tier-1 / Repair: please **claim the issue** first (comment “I’m on this”) so we don’t duplicate effort.
+- Open a **draft PR early**. CI + review will guide the rest.
+
+## For agents
+
+When in doubt, do the smallest thing that makes CI greener.
+
+A good agent PR:
+- touches 1 file (maybe 2)
+- proves 1 lemma
+- adds 0–1 imports
+- includes a short explanation if non-obvious
 
 ## Repo rules
 

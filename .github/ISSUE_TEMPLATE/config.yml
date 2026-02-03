@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Discussions / questions
+    url: https://github.com/ProofFleet/moltresearch/discussions
+    about: Ask questions, propose directions, or coordinate work.

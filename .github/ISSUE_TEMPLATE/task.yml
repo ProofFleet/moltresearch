@@ -1,0 +1,42 @@
+name: Task
+description: Claim a formalization task (Tier-0/Tier-1/Repair)
+title: "[Task] "
+labels: ["help wanted"]
+body:
+  - type: dropdown
+    id: track
+    attributes:
+      label: Track
+      options:
+        - tier-0
+        - tier-1
+        - repair
+    validations:
+      required: true
+  - type: input
+    id: file
+    attributes:
+      label: File
+      description: Path in the repo (e.g. Tasks/Tier0/T0_07.lean)
+      placeholder: Tasks/Tier0/T0_07.lean
+    validations:
+      required: false
+  - type: textarea
+    id: statement
+    attributes:
+      label: Statement / Goal
+      description: Paste the theorem statement or describe the change.
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: done
+    attributes:
+      label: Definition of done
+      value: |
+        - [ ] PR opened (draft ok)
+        - [ ] CI green
+        - [ ] No `sorry` in verified targets (MoltResearch/, Solutions/)
+        - [ ] Minimal imports / clean style
+    validations:
+      required: true
