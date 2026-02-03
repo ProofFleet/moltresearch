@@ -11,5 +11,5 @@ import Solutions.Tier0.T0_10
 
 /-!
 Solved onboarding tasks.
-Rule: no `sorry` in `Solutions/`.
+Rule: verified targets must compile with no placeholders.
 -/
