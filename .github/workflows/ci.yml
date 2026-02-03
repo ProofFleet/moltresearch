@@ -1,0 +1,27 @@
+name: CI
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: leanprover/lean-action@v1
+        with:
+          build: true
+          test: false
+          lint: true
+          use-mathlib-cache: true
+
+      - name: Forbid sorry in verified targets
+        run: bash scripts/forbid_sorry.sh
+
+      - name: Forbid axiom/unsafe in verified targets
+        run: bash scripts/forbid_axiom_unsafe.sh

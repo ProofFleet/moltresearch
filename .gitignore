@@ -1,0 +1,3 @@
+.lake/
+.lakefile.lean
+lake-packages/
