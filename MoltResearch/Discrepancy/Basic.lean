@@ -147,6 +147,15 @@ lemma apSum_sub (f g : ℕ → ℤ) (d n : ℕ) :
   unfold apSum
   simp [Finset.sum_sub_distrib]
 
+/-- Pull out a constant scalar on the left. -/
+lemma apSum_mul_left (c : ℤ) (f : ℕ → ℤ) (d n : ℕ) :
+    apSum (fun k => c * f k) d n = c * apSum f d n := by
+  classical
+  unfold apSum
+  -- `Finset.mul_sum` rewrites `c * (∑ ...)` as `∑ c * ...`.
+  simpa using
+    (Finset.mul_sum (s := Finset.range n) (a := c) (f := fun i => f ((i + 1) * d))).symm
+
 /-- A sign sequence has AP partial sums bounded by length: `|∑_{i=1}^n f (i*d)| ≤ n`.
 
 This is the basic triangle-inequality estimate used to show discrepancy is at most linear.

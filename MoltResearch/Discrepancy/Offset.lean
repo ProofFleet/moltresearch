@@ -41,6 +41,14 @@ lemma apSumOffset_sub (f g : ℕ → ℤ) (d m n : ℕ) :
   unfold apSumOffset
   simp [Finset.sum_sub_distrib]
 
+/-- Pull out a constant scalar on the left. -/
+lemma apSumOffset_mul_left (c : ℤ) (f : ℕ → ℤ) (d m n : ℕ) :
+    apSumOffset (fun k => c * f k) d m n = c * apSumOffset f d m n := by
+  classical
+  unfold apSumOffset
+  simpa using
+    (Finset.mul_sum (s := Finset.range n) (a := c) (f := fun i => f ((m + i + 1) * d))).symm
+
 lemma IsSignSequence.natAbs_apSumOffset_le {f : ℕ → ℤ} (hf : IsSignSequence f) (d m n : ℕ) :
     Int.natAbs (apSumOffset f d m n) ≤ n := by
   induction n with
