@@ -80,6 +80,43 @@ lemma apSum_succ (f : ℕ → ℤ) (d n : ℕ) :
   -- remaining goal is just commutativity
   simp [add_comm]
 
+/-- Algebraic API for `apSum`. -/
+lemma apSum_add (f g : ℕ → ℤ) (d n : ℕ) :
+    apSum (fun k => f k + g k) d n = apSum f d n + apSum g d n := by
+  classical
+  unfold apSum
+  simp [Finset.sum_add_distrib]
+
+lemma apSum_neg (f : ℕ → ℤ) (d n : ℕ) :
+    apSum (fun k => - f k) d n = - apSum f d n := by
+  classical
+  unfold apSum
+  simp [Finset.sum_neg_distrib]
+
+lemma apSum_sub (f g : ℕ → ℤ) (d n : ℕ) :
+    apSum (fun k => f k - g k) d n = apSum f d n - apSum g d n := by
+  classical
+  unfold apSum
+  simp [Finset.sum_sub_distrib]
+
+lemma IsSignSequence.neg {f : ℕ → ℤ} (hf : IsSignSequence f) :
+    IsSignSequence (fun n => - f n) := by
+  intro n
+  rcases hf n with h | h
+  · right; simp [h]
+  · left; simp [h]
+
+lemma HasDiscrepancyAtLeast.neg_iff {f : ℕ → ℤ} {C : ℕ} :
+    HasDiscrepancyAtLeast (fun n => - f n) C ↔ HasDiscrepancyAtLeast f C := by
+  unfold HasDiscrepancyAtLeast
+  constructor
+  · rintro ⟨d, n, hd, h⟩
+    refine ⟨d, n, hd, ?_⟩
+    simpa [apSum_neg] using h
+  · rintro ⟨d, n, hd, h⟩
+    refine ⟨d, n, hd, ?_⟩
+    simpa [apSum_neg] using h
+
 /-- A sign sequence has AP partial sums bounded by length: `|∑_{i=1}^n f (i*d)| ≤ n`.
 
 This is the basic triangle-inequality estimate used to show discrepancy is at most linear.
