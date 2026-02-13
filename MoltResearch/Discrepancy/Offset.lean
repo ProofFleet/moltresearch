@@ -140,6 +140,17 @@ lemma apSumOffset_eq_apSum_step_one (f : ℕ → ℤ) (d m n : ℕ) :
   -- `simp` reduces `((i+1)*1)` and normalizes `(m + (i+1))`.
   simp [Nat.add_assoc]
 
+/-- Express `apSumOffset` as an `apSumOffset` with step `1`, by reindexing the function.
+
+This keeps the offset parameters `(m, n)` intact, while pushing the step size `d` into the
+argument of `f`.
+-/
+lemma apSumOffset_eq_apSumOffset_step_one (f : ℕ → ℤ) (d m n : ℕ) :
+    apSumOffset f d m n = apSumOffset (fun k => f (k * d)) 1 m n := by
+  unfold apSumOffset
+  -- Both sides are the same after simplifying multiplication by `1`.
+  simp
+
 /-- Express `apSumOffset` as an `apSum` with the same step on a shifted function. -/
 lemma apSumOffset_eq_apSum_shift (f : ℕ → ℤ) (d m n : ℕ) :
     apSumOffset f d m n = apSum (fun k => f (m * d + k)) d n := by

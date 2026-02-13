@@ -28,10 +28,12 @@ canonical shapes that downstream files can rewrite into and then work with.
 Arithmetic progression sums:
 - Prefer `apSum f d n` for homogeneous AP sums. Split lengths via `apSum_add_length`.
   For a head+tail decomposition, use `apSum_succ_length`.
-  If an `apSumOffset` appears with `m = 0`, rewrite it back to `apSum` via
-  `apSumOffset_zero_m`.
+  If you want to normalize everything to step size `1`, use `apSum_eq_apSum_step_one`.
+  If an `apSumOffset` appears with `m = 0`, rewrite it back to `apSum` via `apSumOffset_zero_m`.
 - Prefer `apSumOffset f d m n` for “tail starting after `m` steps of length `n`”.
   For a head+tail decomposition, use `apSumOffset_succ_length`.
+  If you want to normalize everything to step size `1` while keeping the offset parameters,
+  use `apSumOffset_eq_apSumOffset_step_one`.
   Rewrite between tails and differences using `apSumOffset_eq_sub` and
   `apSum_sub_apSum_eq_apSumOffset`. When you are already in the canonical `(m + n) - m` form,
   prefer `apSum_sub_eq_apSumOffset` (subtraction → tail) for rewriting.
@@ -47,6 +49,7 @@ Arithmetic progression sums:
   `apSum_sub_apSum_eq_sum_Icc` when starting from `apSum … n - apSum … m` with `m ≤ n`).
 - Prefer `apSumFrom f a d n` for affine AP sums `a + d, a + 2d, …, a + nd`.
   Split lengths via `apSumFrom_add_length`.
+  If you want to normalize everything to step size `1`, use `apSumFrom_eq_apSum_step_one`.
   For tails/differences, rewrite via `apSumFrom_tail_eq_sub` (tail → difference) or
   `apSumFrom_sub_eq_apSumFrom_tail` (difference → tail, in the canonical `(m + n) - m` form).
   For differences with an inequality `m ≤ n`, use `apSumFrom_sub_apSumFrom_eq_apSumFrom`.

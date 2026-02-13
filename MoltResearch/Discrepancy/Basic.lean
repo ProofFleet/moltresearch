@@ -360,6 +360,16 @@ lemma apSum_succ (f : ℕ → ℤ) (d n : ℕ) :
   -- remaining goal is just commutativity
   simp [add_comm]
 
+/-- Express `apSum` as an `apSum` with step `1`, by reindexing the function.
+
+This is sometimes convenient when normalizing to a single “step size” across related sums.
+-/
+lemma apSum_eq_apSum_step_one (f : ℕ → ℤ) (d n : ℕ) :
+    apSum f d n = apSum (fun k => f (k * d)) 1 n := by
+  unfold apSum
+  -- Both sides are the same after simplifying multiplication by `1`.
+  simp
+
 @[simp] lemma apSum_two (f : ℕ → ℤ) (d : ℕ) : apSum f d 2 = f d + f (2 * d) := by
   simpa [apSum_one] using (apSum_succ (f := f) (d := d) (n := 1))
 

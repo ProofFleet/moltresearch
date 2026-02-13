@@ -80,6 +80,17 @@ lemma apSumFrom_eq_apSum_shift (f : ℕ → ℤ) (a d n : ℕ) :
   unfold apSumFrom apSum
   rfl
 
+/-- Express `apSumFrom` as an `apSum` with step `1`, by reindexing the function.
+
+This is a useful normal form when you want to reason about “affine AP sums” using a single
+step size (`1`) and push the true step size into the argument of `f`.
+-/
+lemma apSumFrom_eq_apSum_step_one (f : ℕ → ℤ) (a d n : ℕ) :
+    apSumFrom f a d n = apSum (fun k => f (a + k * d)) 1 n := by
+  unfold apSumFrom apSum
+  -- Both sides are the same after simplifying multiplication by `1`.
+  simp
+
 lemma apSumFrom_add_length (f : ℕ → ℤ) (a d m n : ℕ) :
   apSumFrom f a d (m + n) = apSumFrom f a d m + apSumFrom f (a + m * d) d n := by
   classical
