@@ -190,6 +190,18 @@ lemma apSumOffset_eq_apSum_step_one (f : ℕ → ℤ) (d m n : ℕ) :
   -- `simp` reduces `((i+1)*1)` and normalizes `(m + (i+1))`.
   simp [Nat.add_assoc]
 
+/-- Paper → step-one normal form: rewrite the interval sum
+`∑ i ∈ Icc (m+1) (m+n), f (i*d)` as a step-one homogeneous AP sum.
+
+This is the composition of `sum_Icc_eq_apSumOffset` and `apSumOffset_eq_apSum_step_one`.
+-/
+lemma sum_Icc_eq_apSum_step_one (f : ℕ → ℤ) (d m n : ℕ) :
+    (Finset.Icc (m + 1) (m + n)).sum (fun i => f (i * d)) =
+      apSum (fun k => f ((m + k) * d)) 1 n := by
+  -- paper → nucleus (`apSumOffset`), then nucleus → step-one (`apSum … 1 …`)
+  simpa [apSumOffset_eq_apSum_step_one] using
+    (sum_Icc_eq_apSumOffset (f := f) (d := d) (m := m) (n := n))
+
 /-- Express `apSumOffset` as an `apSum` with the same step on a shifted function. -/
 lemma apSumOffset_eq_apSum_shift (f : ℕ → ℤ) (d m n : ℕ) :
     apSumOffset f d m n = apSum (fun k => f (m * d + k)) d n := by

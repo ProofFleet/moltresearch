@@ -182,6 +182,23 @@ lemma sum_Icc_eq_apSumFrom_tail (f : ℕ → ℤ) (a d m n : ℕ) :
   simpa using
     (apSumFrom_tail_eq_sum_Icc (f := f) (a := a) (d := d) (m := m) (n := n)).symm
 
+/-- Paper → step-one normal form: rewrite the interval sum
+`∑ i ∈ Icc (m+1) (m+n), f (a + i*d)` as a step-one homogeneous AP sum.
+
+This is the composition of `sum_Icc_eq_apSumFrom_tail` and `apSumFrom_tail_eq_apSum_step_one`.
+-/
+lemma sum_Icc_eq_apSum_step_one_affine (f : ℕ → ℤ) (a d m n : ℕ) :
+    (Finset.Icc (m + 1) (m + n)).sum (fun i => f (a + i * d)) =
+      apSum (fun k => f (a + (m + k) * d)) 1 n := by
+  calc
+    (Finset.Icc (m + 1) (m + n)).sum (fun i => f (a + i * d))
+        = apSumFrom f (a + m * d) d n := by
+            simpa using
+              (sum_Icc_eq_apSumFrom_tail (f := f) (a := a) (d := d) (m := m) (n := n))
+    _ = apSum (fun k => f (a + (m + k) * d)) 1 n := by
+            simpa using
+              (apSumFrom_tail_eq_apSum_step_one (f := f) (a := a) (d := d) (m := m) (n := n))
+
 /-- Normal form: when `m ≤ n`, rewrite the “paper notation” interval sum
 `∑ i ∈ Icc (m+1) n, f (a + i*d)` to the affine tail sum `apSumFrom f (a + m*d) d (n - m)`.
 

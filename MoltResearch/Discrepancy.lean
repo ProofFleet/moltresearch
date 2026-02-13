@@ -53,7 +53,9 @@ Arithmetic progression sums:
   Sometimes it is useful to change viewpoint on offset sums:
   - offset ↔ affine: `apSumOffset f d m n` ↔ `apSumFrom f (m * d) d n` via `apSumOffset_eq_apSumFrom`.
   - “step-one” normalization: `apSumOffset f d m n` ↦ `apSum (fun k => f ((m + k) * d)) 1 n` via
-    `apSumOffset_eq_apSum_step_one`.
+    `apSumOffset_eq_apSum_step_one`. If you are starting from paper notation
+    `∑ i ∈ Icc (m+1) (m+n), f (i*d)`, you can normalize directly to this step-one form via
+    `sum_Icc_eq_apSum_step_one`.
   - shifted-sequence normalization:
     - `apSumOffset f d m n` ↦ `apSum (fun k => f (m * d + k)) d n` via `apSumOffset_eq_apSum_shift`.
     - `apSumOffset f d m n` ↦ `apSum (fun k => f (k + m * d)) d n` via
@@ -66,7 +68,9 @@ Arithmetic progression sums:
   summand), rewrite
   `apSumFrom f a d n` ↦ `apSum (fun k => f (a + k * d)) 1 n` via `apSumFrom_eq_apSum_step_one`,
   and tails `apSumFrom f (a + m*d) d n` ↦ `apSum (fun k => f (a + (m + k) * d)) 1 n` via
-  `apSumFrom_tail_eq_apSum_step_one`.
+  `apSumFrom_tail_eq_apSum_step_one`. If you are starting from paper notation
+  `∑ i ∈ Icc (m+1) (m+n), f (a + i*d)`, you can normalize directly to the step-one form via
+  `sum_Icc_eq_apSum_step_one_affine`.
   If you want an offset-sum normal form on the shifted sequence `k ↦ f (a + k)`, rewrite
   `apSumFrom f a d n` ↦ `apSumOffset (fun k => f (a + k)) d 0 n` via
   `apSumFrom_eq_apSumOffset_shift`. If you prefer the translation-friendly `k ↦ f (k + a)` form,
@@ -227,6 +231,11 @@ example :
   simpa using sum_Icc_eq_apSumOffset (f := f) (d := d) (m := m) (n := n)
 
 example :
+    (Finset.Icc (m + 1) (m + n)).sum (fun i => f (i * d)) =
+      apSum (fun k => f ((m + k) * d)) 1 n := by
+  simpa using sum_Icc_eq_apSum_step_one (f := f) (d := d) (m := m) (n := n)
+
+example :
     (Finset.Icc (m + 1) (m + n)).sum (fun i => f (i * d)) = apSum f d (m + n) - apSum f d m := by
   simpa using sum_Icc_eq_apSum_sub (f := f) (d := d) (m := m) (n := n)
 
@@ -291,6 +300,11 @@ example :
 example :
     (Finset.Icc (m + 1) (m + n)).sum (fun i => f (a + i * d)) = apSumFrom f (a + m * d) d n := by
   simpa using sum_Icc_eq_apSumFrom_tail (f := f) (a := a) (d := d) (m := m) (n := n)
+
+example :
+    (Finset.Icc (m + 1) (m + n)).sum (fun i => f (a + i * d)) =
+      apSum (fun k => f (a + (m + k) * d)) 1 n := by
+  simpa using sum_Icc_eq_apSum_step_one_affine (f := f) (a := a) (d := d) (m := m) (n := n)
 
 example (hmn : m ≤ n) :
     (Finset.Icc (m + 1) n).sum (fun i => f (a + i * d)) = apSumFrom f (a + m * d) d (n - m) := by
