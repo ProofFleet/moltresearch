@@ -21,11 +21,7 @@ lemma apSumFrom_tail_succ_length (f : ℕ → ℤ) (a d m n : ℕ) :
   have h := apSumFrom_succ_length (f := f) (a := a + m * d) (d := d) (n := n)
   -- Normalize `(a + m*d) + d` to `a + (m+1)*d`.
   have hstart : (a + m * d) + d = a + (m + 1) * d := by
-    calc
-      (a + m * d) + d = a + (m * d + d) := by
-        simp [Nat.add_assoc]
-      _ = a + (m + 1) * d := by
-        simpa [Nat.add_assoc, Nat.one_mul] using congrArg (fun t => a + t) (Nat.add_mul m 1 d).symm
+    simpa using (add_mul_succ_norm_left a m d)
   simpa [hstart] using h
 
 /-- Translation-friendly variant of `apSumFrom_tail_succ_length`, with the affine term written as
@@ -64,12 +60,12 @@ lemma apSumFrom_tail_succ (f : ℕ → ℤ) (a d m n : ℕ) :
   -- Normalize `(a + m*d) + (n+1)*d` to `a + (m+n+1)*d`.
   have hlast : (a + m * d) + (n + 1) * d = a + (m + n + 1) * d := by
     calc
-      (a + m * d) + (n + 1) * d = a + (m * d + (n + 1) * d) := by
+      (a + m * d) + (n + 1) * d = a + m * d + (n + 1) * d := by
         simp [Nat.add_assoc]
-      _ = a + ((m + (n + 1)) * d) := by
-        simpa using congrArg (fun t => a + t) (Nat.add_mul m (n + 1) d).symm
+      _ = a + (m + (n + 1)) * d := by
+        simpa using (add_mul_add_norm' a m (n + 1) d)
       _ = a + (m + n + 1) * d := by
-        simp [Nat.add_assoc]
+        simp [Nat.add_assoc, Nat.add_comm, Nat.add_left_comm]
   simpa [hlast, Nat.add_assoc, Nat.add_left_comm, Nat.add_comm] using h
 
 /-- Translation-friendly variant of `apSumFrom_tail_succ`, with the affine term written as

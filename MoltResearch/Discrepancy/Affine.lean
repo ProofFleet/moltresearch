@@ -41,6 +41,27 @@ lemma add_mul_succ_norm' (a m d : ℕ) :
     a + d * (m + 1) = a + (m + 1) * d := by
   simp [Nat.mul_comm]
 
+/-! #### Additional endpoint normalisation lemmas
+
+These lemmas are useful when an affine endpoint shows up as `(a + m*d) + d` or `a + m*d + d`.
+We mark them `[simp]` since they are one-way rewrites towards the succ-product form.
+-/
+
+/-- Normalise `(a + m * d) + d` to `a + (m + 1) * d`. -/
+@[simp] lemma add_mul_succ_norm_left (a m d : ℕ) :
+    (a + m * d) + d = a + (m + 1) * d := by
+  calc
+    (a + m * d) + d = a + (m * d + d) := by
+      simp [Nat.add_assoc]
+    _ = a + (m + 1) * d := by
+      -- `m*d + d = (m+1)*d`
+      simpa [Nat.succ_mul, Nat.add_assoc, Nat.add_comm, Nat.add_left_comm]
+
+/-- Normalise `a + m * d + d` to `a + (m + 1) * d`. -/
+@[simp] lemma add_mul_succ_norm_right (a m d : ℕ) :
+    a + m * d + d = a + (m + 1) * d := by
+  simpa [Nat.add_assoc] using (add_mul_succ_norm_left a m d)
+
 /-- Normalise `a + (m+n) * d` to `a + m*d + n*d` (canonical form).
 
 We *do not* tag this `[simp]`: it can be useful, but it is a fairly powerful reassociation
