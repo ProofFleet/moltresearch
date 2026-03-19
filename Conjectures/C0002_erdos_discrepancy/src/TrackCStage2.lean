@@ -160,7 +160,7 @@ has unbounded discrepancy along its associated fixed step.
 This is `sorry` for now; it serves as the typed seam between Stage 1 (pure index gymnastics) and
 later analytic/combinatorial stages.
 -/
-theorem stage2 (f : ℕ → ℤ) (hf : IsSignSequence f) : Stage2Output f := by
+noncomputable def stage2 (f : ℕ → ℤ) (hf : IsSignSequence f) : Stage2Output f := by
   classical
   -- TODO(Track C): fill in Tao 2015’s first major reduction producing fixed-step unboundedness.
   -- For now we expose the contract as a named boundary.
