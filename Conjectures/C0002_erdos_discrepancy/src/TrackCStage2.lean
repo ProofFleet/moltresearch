@@ -65,7 +65,7 @@ theorem forall_hasDiscrepancyAtLeastAlong (out : Stage2Output f) :
   have : (∀ C : ℕ, HasDiscrepancyAtLeastAlong out.g out.d C) ↔
       Tao2015.UnboundedDiscrepancyAlong out.g out.d :=
     (HasDiscrepancyAtLeastAlong.forall_hasDiscrepancyAtLeastAlong_iff_unboundedDiscrepancyAlong
-      (g := out.g) (d := out.d))
+      (f := out.g) (d := out.d))
   exact (this.2 out.unbounded)
 
 /-- Stage 2 implies the reduced sequence is not bounded along its fixed step size. -/
@@ -160,7 +160,7 @@ has unbounded discrepancy along its associated fixed step.
 This is `sorry` for now; it serves as the typed seam between Stage 1 (pure index gymnastics) and
 later analytic/combinatorial stages.
 -/
-theorem stage2 (f : ℕ → ℤ) (hf : IsSignSequence f) : Stage2Output f := by
+noncomputable def stage2 (f : ℕ → ℤ) (hf : IsSignSequence f) : Stage2Output f := by
   classical
   -- TODO(Track C): fill in Tao 2015’s first major reduction producing fixed-step unboundedness.
   -- For now we expose the contract as a named boundary.
