@@ -98,6 +98,24 @@ def apSumOffset (f : ℕ → ℤ) (d m n : ℕ) : ℤ :=
   (Finset.range n).sum (fun i => f ((m + i + 1) * d))
 
 /-!
+### Degenerate-step normal forms (`d = 0`)
+
+Checklist item: Problems/erdos_discrepancy.md (Track B) — Coherence lemma for `apSumOffset` under `d=0` at the `discOffset` level.
+-/
+
+/-- When the step is `0`, the sampled index is always `0`, so the offset AP sum is `n` copies of `f 0`.
+
+Checklist item: Problems/erdos_discrepancy.md (Track B) — degenerate-step normal form.
+-/
+@[simp] lemma apSumOffset_zero_step (f : ℕ → ℤ) (m n : ℕ) :
+    apSumOffset f 0 m n = (n : ℤ) * f 0 := by
+  -- Every term is `f 0` because `((m+i+1) * 0) = 0`.
+  unfold apSumOffset
+  -- Reduce to the sum of a constant function on `Finset.range n`.
+  simp
+
+
+/-!
 ### Multiplicative dilation normal forms
 
 Checklist item: Problems/erdos_discrepancy.md (Track B) — Multiplicative dilation normal form.
@@ -301,6 +319,17 @@ def discOffset (f : ℕ → ℤ) (d m n : ℕ) : ℕ :=
 lemma discOffset_eq_natAbs_apSumOffset (f : ℕ → ℤ) (d m n : ℕ) :
     discOffset f d m n = Int.natAbs (apSumOffset f d m n) :=
   rfl
+
+/-- Degenerate-step normal form at the `discOffset` wrapper level (`d = 0`).
+
+This is phrased to be `simp`-friendly without unfolding `discOffset` in downstream goals.
+
+Checklist item: Problems/erdos_discrepancy.md (Track B) — Coherence lemma for `apSumOffset` under `d=0` at the `discOffset` level.
+-/
+@[simp] lemma discOffset_zero_step (f : ℕ → ℤ) (m n : ℕ) :
+    discOffset f 0 m n = Int.natAbs ((n : ℤ) * f 0) := by
+  unfold discOffset
+  simp
 
 /-- Support-form version of “restriction to a finite window”: restricting `f` to the relevant
 `apSupport` (with default value `0` outside) does not change `discOffset`.
