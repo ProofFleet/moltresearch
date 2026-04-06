@@ -144,6 +144,41 @@ lemma apSumOffset_map_mul_right (f : ℕ → ℤ) (q d m n : ℕ) :
   intro i hi
   simp [Nat.mul_assoc]
 
+/-!
+### Reindexing normal form (offset, divisibility)
+
+Checklist item: `Problems/erdos_discrepancy.md` (Track B) —
+“Reindexing normal form (offset, divisibility): if `q ∣ d`, add a preferred lemma rewriting …”.
+
+These are convenience wrappers around `apSumOffset_map_mul_right` that let downstream proofs
+rewrite an offset AP sum at step `d*q` as an offset AP sum at step `d` over the dilated sequence
+`k ↦ f (k*q)`.
+-/
+
+/-- **Reindexing normal form (offset, divisibility).**
+
+Rewrite an offset AP sum whose step is multiplied by `q` into an offset AP sum over the dilated
+sequence `k ↦ f (k*q)`.
+
+This is the `apSumOffset`-level version; see also `discOffset_mul_right_eq_map_mul`.
+-/
+lemma apSumOffset_mul_right_eq_map_mul (f : ℕ → ℤ) (d q m n : ℕ) :
+    apSumOffset f (d * q) m n = apSumOffset (fun k => f (k * q)) d m n := by
+  simpa using (apSumOffset_map_mul_right (f := f) (q := q) (d := d) (m := m) (n := n)).symm
+
+/-- **Reindexing normal form (offset, divisibility)**, with an explicit divisibility witness.
+
+If `q ∣ d`, we can rewrite `apSumOffset f d m n` in the preferred “map-mul” normal form by
+exhibiting `d = d' * q`.
+-/
+lemma apSumOffset_eq_map_mul_of_dvd (f : ℕ → ℤ) {q d : ℕ} (hd : q ∣ d) (m n : ℕ) :
+    ∃ d' : ℕ, d = d' * q ∧ apSumOffset f d m n = apSumOffset (fun k => f (k * q)) d' m n := by
+  rcases hd with ⟨d', rfl⟩
+  refine ⟨d', by simp [Nat.mul_comm], ?_⟩
+  -- `d` is definitionally `q * d'`; rewrite it as `d' * q` to use the preferred normal form.
+  simpa [Nat.mul_comm, Nat.mul_left_comm, Nat.mul_assoc] using
+    (apSumOffset_mul_right_eq_map_mul (f := f) (d := d') (q := q) (m := m) (n := n))
+
 /-- Multiplicative dilation normal form for offset AP sums (`mul_left` summand convention).
 
 Checklist item: Problems/erdos_discrepancy.md (Track B) — Multiplicative dilation normal form.
@@ -334,6 +369,34 @@ This direction avoids simp loops with `discOffset_def`.
 @[simp] lemma natAbs_apSumOffset_eq_discOffset (f : ℕ → ℤ) (d m n : ℕ) :
     Int.natAbs (apSumOffset f d m n) = discOffset f d m n :=
   rfl
+
+/-!
+### Reindexing normal form (offset, divisibility) at discrepancy level
+
+These are the `discOffset`-level companions of the `apSumOffset` reindexing lemmas
+`apSumOffset_mul_right_eq_map_mul` and `apSumOffset_eq_map_mul_of_dvd`.
+-/
+
+/-- **Reindexing normal form (offset, divisibility)** at discrepancy level.
+
+Rewrite `discOffset f (d*q) …` as a `discOffset` over the dilated sequence `k ↦ f (k*q)`.
+-/
+lemma discOffset_mul_right_eq_map_mul (f : ℕ → ℤ) (d q m n : ℕ) :
+    discOffset f (d * q) m n = discOffset (fun k => f (k * q)) d m n := by
+  unfold discOffset
+  simp [apSumOffset_mul_right_eq_map_mul (f := f) (d := d) (q := q) (m := m) (n := n)]
+
+/-- **Reindexing normal form (offset, divisibility)** at discrepancy level, with a divisibility witness.
+
+If `q ∣ d`, we can rewrite `discOffset f d m n` in the preferred “map-mul” normal form by
+exhibiting `d = d' * q`.
+-/
+lemma discOffset_eq_map_mul_of_dvd (f : ℕ → ℤ) {q d : ℕ} (hd : q ∣ d) (m n : ℕ) :
+    ∃ d' : ℕ, d = d' * q ∧ discOffset f d m n = discOffset (fun k => f (k * q)) d' m n := by
+  rcases hd with ⟨d', rfl⟩
+  refine ⟨d', by simp [Nat.mul_comm], ?_⟩
+  simpa [Nat.mul_comm, Nat.mul_left_comm, Nat.mul_assoc] using
+    (discOffset_mul_right_eq_map_mul (f := f) (d := d') (q := q) (m := m) (n := n))
 
 /-!
 ### Degenerate-step (`d = 0`) normal forms

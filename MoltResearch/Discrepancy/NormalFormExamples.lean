@@ -36,6 +36,21 @@ example (q : ℕ) : apSum (fun t => f (t * q)) d n = apSum f (d * q) n := by
 example (q : ℕ) : apSumOffset (fun t => f (t * q)) d m n = apSumOffset f (d * q) m n := by
   simpa using (apSumOffset_map_mul_right (f := f) (q := q) (d := d) (m := m) (n := n))
 
+/-!
+### Regression: reindexing normal form (offset, divisibility) (Track B)
+
+These are compile-only examples ensuring the preferred rewrite direction
+`apSumOffset f (d*q) … = apSumOffset (fun k => f (k*q)) d …` remains a one-liner.
+-/
+
+example : apSumOffset f (2 * 3) m n = apSumOffset (fun t => f (t * 3)) 2 m n := by
+  simpa [Nat.mul_assoc] using
+    (apSumOffset_mul_right_eq_map_mul (f := f) (d := 2) (q := 3) (m := m) (n := n))
+
+example : discOffset f (2 * 3) m n = discOffset (fun t => f (t * 3)) 2 m n := by
+  simpa [Nat.mul_assoc] using
+    (discOffset_mul_right_eq_map_mul (f := f) (d := 2) (q := 3) (m := m) (n := n))
+
 example (q : ℕ) : apSumFrom (fun t => f (t * q)) a d n = apSumFrom f (a * q) (d * q) n := by
   simpa using (apSumFrom_map_mul_right (f := f) (q := q) (a := a) (d := d) (n := n))
 
