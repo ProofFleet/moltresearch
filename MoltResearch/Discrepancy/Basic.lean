@@ -400,13 +400,33 @@ This direction avoids simp loops with `discOffset_def`.
 /-!
 ### Degenerate-step (`d = 0`) normal forms
 
-Checklist item: Problems/erdos_discrepancy.md (Track B) — “Coherence lemma for `apSumOffset` under `d=0`”.
+Checklist item: Problems/erdos_discrepancy.md (Track B) — “Coherence lemma for `discOffset`/`discrepancy` under `d=0`”.
 
-These lemmas are oriented for `simp`: they prevent downstream goals from unfolding `apSumOffset`
-into a constant `Finset` sum when the step is `0`.
+These lemmas are oriented for `simp`: they prevent downstream goals from unfolding `apSum`/`apSumOffset`
+into constant `Finset` sums when the step is `0`.
 -/
 
-/-- Degenerate step (`d = 0`): the sampled index is always `0`, so the sum is a constant sum. -/
+/-- Degenerate step (`d = 0`) for homogeneous AP sums: the sampled index is always `0`. -/
+@[simp] lemma apSum_zero_step (f : ℕ → ℤ) (n : ℕ) :
+    apSum f 0 n = (n : ℤ) * f 0 := by
+  classical
+  unfold apSum
+  -- All sampled indices are `((i+1)*0) = 0`.
+  simp
+
+/-- Degenerate step (`d = 0`) for discrepancy: normalize to a constant-multiple normal form. -/
+@[simp] lemma discrepancy_zero_step (f : ℕ → ℤ) (n : ℕ) :
+    discrepancy f 0 n = Int.natAbs ((n : ℤ) * f 0) := by
+  unfold discrepancy
+  simp
+
+/-- Degenerate step (`d = 0`) for homogeneous `disc`. -/
+@[simp] lemma disc_zero_step (f : ℕ → ℤ) (n : ℕ) :
+    disc f 0 n = Int.natAbs ((n : ℤ) * f 0) := by
+  unfold disc
+  simp
+
+/-- Degenerate step (`d = 0`): the sampled index is always `0`, so the offset sum is a constant sum. -/
 @[simp] lemma apSumOffset_zero_step (f : ℕ → ℤ) (m n : ℕ) :
     apSumOffset f 0 m n = (n : ℤ) * f 0 := by
   classical
@@ -419,6 +439,7 @@ into a constant `Finset` sum when the step is `0`.
     discOffset f 0 m n = Int.natAbs ((n : ℤ) * f 0) := by
   unfold discOffset
   simp
+
 
 /-!
 ### `discAlong`: along-`d` API coherence (`m = 0` offset form)
@@ -439,6 +460,12 @@ lemma discAlong_def (f : ℕ → ℤ) (d n : ℕ) : discAlong f d n = discOffset
 /-- Bridge lemma: `discAlong` agrees with the original homogeneous wrapper `discrepancy`. -/
 lemma discAlong_eq_discrepancy (f : ℕ → ℤ) (d n : ℕ) : discAlong f d n = discrepancy f d n := by
   unfold discAlong discOffset discrepancy apSumOffset apSum
+  simp
+
+/-- Degenerate step (`d = 0`) for `discAlong`. -/
+@[simp] lemma discAlong_zero_step (f : ℕ → ℤ) (n : ℕ) :
+    discAlong f 0 n = Int.natAbs ((n : ℤ) * f 0) := by
+  unfold discAlong
   simp
 
 /-!
@@ -895,7 +922,7 @@ lemma apSum_shift_mul (f : ℕ → ℤ) (a d n : ℕ) :
         simpa [Nat.add_mul]
       _ = (a + i + 1) * d := by
         simp [Nat.add_assoc]
-  simp [h, Nat.add_assoc, Nat.add_left_comm, Nat.add_comm]
+  simp [h, Nat.add_assoc]
 
 /-- One-way normal form for discrepancy of a shift by `a*d`: it expands to the `natAbs` of an
 offset AP sum.
@@ -2100,7 +2127,7 @@ lemma discOffset_succ_le_add_natAbs (f : ℕ → ℤ) (d m n : ℕ) :
   calc
     Int.natAbs (apSumOffset f d m (n + 1))
         = Int.natAbs (apSumOffset f d m n + f ((m + n + 1) * d)) := by
-          simp [apSumOffset_succ, Nat.add_assoc, Nat.add_left_comm, Nat.add_comm]
+          simp [apSumOffset_succ, Nat.add_assoc, Nat.add_left_comm]
     _ ≤ Int.natAbs (apSumOffset f d m n) + Int.natAbs (f ((m + n + 1) * d)) := by
           simpa using
             (Int.natAbs_add_le (apSumOffset f d m n) (f ((m + n + 1) * d)))
