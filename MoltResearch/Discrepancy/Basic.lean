@@ -390,6 +390,74 @@ This is packaged in a finitary form (a `Finset.sup` over `range (N+1)`) so it is
 def discOffsetUpTo (f : ℕ → ℤ) (d m N : ℕ) : ℕ :=
   (Finset.range (N + 1)).sup (fun n => discOffset f d m n)
 
+/-!
+### Discrepancy up to a finite length in a fixed residue class
+
+Checklist item: Problems/erdos_discrepancy.md (Track B) — “Max discrepancy up to N” API (residue-friendly).
+-/
+
+/-- Maximal homogeneous discrepancy over lengths `n ≤ N` with `n % q = r`.
+
+This is packaged as a finitary `Finset.sup` over the filtered `range (N+1)`.
+
+Checklist item: Problems/erdos_discrepancy.md (Track B) — “Max discrepancy up to N” API (residue-friendly).
+-/
+
+def discUpToInResidue (f : ℕ → ℤ) (d N q r : ℕ) : ℕ :=
+  (Finset.filter (fun n => n % q = r) (Finset.range (N + 1))).sup (fun n => disc f d n)
+
+/-- Maximal offset discrepancy over lengths `n ≤ N` with `n % q = r`.
+
+This is packaged as a finitary `Finset.sup` over the filtered `range (N+1)`.
+
+Checklist item: Problems/erdos_discrepancy.md (Track B) — “Max discrepancy up to N” API (residue-friendly).
+-/
+
+def discOffsetUpToInResidue (f : ℕ → ℤ) (d m N q r : ℕ) : ℕ :=
+  (Finset.filter (fun n => n % q = r) (Finset.range (N + 1))).sup (fun n => discOffset f d m n)
+
+/-- The maximum in `discUpToInResidue` is attained by some `n ≤ N` with `n % q = r`,
+provided such an `n` exists.
+
+Checklist item: Problems/erdos_discrepancy.md (Track B) — “Max discrepancy up to N” API (residue-friendly).
+-/
+lemma exists_disc_eq_discUpToInResidue (f : ℕ → ℤ) (d N q r : ℕ)
+    (h : ∃ n ≤ N, n % q = r) :
+    ∃ n ≤ N, n % q = r ∧ disc f d n = discUpToInResidue f d N q r := by
+  classical
+  let s : Finset ℕ := Finset.filter (fun n => n % q = r) (Finset.range (N + 1))
+  have hs : s.Nonempty := by
+    rcases h with ⟨n, hnN, hnr⟩
+    refine ⟨n, ?_⟩
+    have hnmem : n ∈ Finset.range (N + 1) := Finset.mem_range.2 (Nat.lt_succ_of_le hnN)
+    simpa [s, hnmem, hnr]
+  rcases Finset.exists_mem_eq_sup (s := s) (f := fun t => disc f d t) hs with ⟨n, hnmem, hsup⟩
+  have hnrange : n ∈ Finset.range (N + 1) := (Finset.mem_filter.1 hnmem).1
+  have hnres : n % q = r := (Finset.mem_filter.1 hnmem).2
+  refine ⟨n, Nat.le_of_lt_succ (Finset.mem_range.1 hnrange), hnres, ?_⟩
+  simpa [discUpToInResidue, s] using hsup.symm
+
+/-- The maximum in `discOffsetUpToInResidue` is attained by some `n ≤ N` with `n % q = r`,
+provided such an `n` exists.
+
+Checklist item: Problems/erdos_discrepancy.md (Track B) — “Max discrepancy up to N” API (residue-friendly).
+-/
+lemma exists_discOffset_eq_discOffsetUpToInResidue (f : ℕ → ℤ) (d m N q r : ℕ)
+    (h : ∃ n ≤ N, n % q = r) :
+    ∃ n ≤ N, n % q = r ∧ discOffset f d m n = discOffsetUpToInResidue f d m N q r := by
+  classical
+  let s : Finset ℕ := Finset.filter (fun n => n % q = r) (Finset.range (N + 1))
+  have hs : s.Nonempty := by
+    rcases h with ⟨n, hnN, hnr⟩
+    refine ⟨n, ?_⟩
+    have hnmem : n ∈ Finset.range (N + 1) := Finset.mem_range.2 (Nat.lt_succ_of_le hnN)
+    simpa [s, hnmem, hnr]
+  rcases Finset.exists_mem_eq_sup (s := s) (f := fun t => discOffset f d m t) hs with ⟨n, hnmem, hsup⟩
+  have hnrange : n ∈ Finset.range (N + 1) := (Finset.mem_filter.1 hnmem).1
+  have hnres : n % q = r := (Finset.mem_filter.1 hnmem).2
+  refine ⟨n, Nat.le_of_lt_succ (Finset.mem_range.1 hnrange), hnres, ?_⟩
+  simpa [discOffsetUpToInResidue, s] using hsup.symm
+
 /-- Any particular `disc f d n` with `n ≤ N` is bounded by `discUpTo f d N`.
 
 Checklist item: Problems/erdos_discrepancy.md (Track B) — “Max discrepancy up to N” API.

@@ -225,6 +225,17 @@ example (hn : n₁ ≤ n₂) : discOffsetUpTo f d m n₁ ≤ discOffsetUpTo f d 
 example : ∃ t ≤ n, discOffset f d m t = discOffsetUpTo f d m n := by
   simpa using (exists_discOffset_eq_discOffsetUpTo (f := f) (d := d) (m := m) (N := n))
 
+-- Regression (Track B / “max discrepancy up to N” API, residue-friendly): witness attainment in a fixed residue class.
+example :
+    ∃ t ≤ n, t % 1 = 0 ∧ disc f d t = discUpToInResidue f d n 1 0 := by
+  refine (exists_disc_eq_discUpToInResidue (f := f) (d := d) (N := n) (q := 1) (r := 0) ?_)
+  exact ⟨0, Nat.zero_le _, by simp⟩
+
+example :
+    ∃ t ≤ n, t % 1 = 0 ∧ discOffset f d m t = discOffsetUpToInResidue f d m n 1 0 := by
+  refine (exists_discOffset_eq_discOffsetUpToInResidue (f := f) (d := d) (m := m) (N := n) (q := 1) (r := 0) ?_)
+  exact ⟨0, Nat.zero_le _, by simp⟩
+
 -- Regression (Track B / degenerate tail normal forms):
 -- `discOffset` at length 0 and 1 should simplify to explicit normal forms.
 example : discOffset f d m 0 = 0 := by
