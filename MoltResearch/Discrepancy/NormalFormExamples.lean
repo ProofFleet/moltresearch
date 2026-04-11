@@ -32,7 +32,7 @@ stable surface `import MoltResearch.Discrepancy`.
 -/
 
 example : apSum (fun _ => (1 : ℤ)) d n = (n : ℤ) := by
-  simp
+  simpa using (apSum_const_one (d := d) (n := n))
 
 example : discOffset (fun _ => (1 : ℤ)) d m n = n := by
   simpa [discOffset_const_one]
@@ -44,13 +44,11 @@ When the step `d` is even, the sampled indices are all even, so the sequence res
 constant `1` sequence and the discrepancy reduces to the constant-sequence computation.
 -/
 
-example : apSum (fun t : ℕ => if t % 2 = 0 then (1 : ℤ) else -1) 2 n = (n : ℤ) := by
-  -- Every sampled index is of the form `(i+1)*2`, hence even.
-  simp [apSum]
+example : apSum altTwo 2 n = (n : ℤ) := by
+  simpa using (apSum_altTwo_step_two (n := n))
 
-example : discOffset (fun t : ℕ => if t % 2 = 0 then (1 : ℤ) else -1) 2 m n = n := by
-  -- Same idea for the offset progression: every sampled index is even.
-  simp [discOffset, apSumOffset]
+example : discOffset altTwo 2 m n = n := by
+  simpa using (discOffset_altTwo_step_two (m := m) (n := n))
 
 /-!
 ### NEW (Track B): micro-pipeline “starter scripts”

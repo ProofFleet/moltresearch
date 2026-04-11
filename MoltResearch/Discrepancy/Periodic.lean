@@ -92,4 +92,36 @@ lemma discOffset_periodic_of_dvd_step (hp : Function.Periodic f p) {d : ℕ} (hd
   simp [apSumOffset_periodic_of_dvd_step (f := f) (p := p) hp (d := d) hd (m := m) (n := n),
     apSumOffset_periodic_of_dvd_step (f := f) (p := p) hp (d := d) hd (m := 0) (n := n)]
 
+
+
+/-!
+## Explicit periodic sanity checks (Track B)
+
+Checklist item: Problems/erdos_discrepancy.md (Track B) —
+“Constant/periodic sequence sanity checks: explicit computed examples for `apSum`/`discOffset`”.
+
+These are deliberately concrete: they should keep working as one-line `simp` proofs and serve as
+stable regression anchors.
+-/
+
+/-- The alternating sign sequence of period `2`. -/
+def altTwo (t : ℕ) : ℤ := if t % 2 = 0 then (1 : ℤ) else -1
+
+/-- Sampling the alternating sign sequence with even step (`d = 2`) gives the constant sum `n`.
+
+Checklist item: Problems/erdos_discrepancy.md (Track B) —
+“Constant/periodic sequence sanity checks: explicit computed examples for `apSum`/`discOffset`”.
+-/
+lemma apSum_altTwo_step_two (n : ℕ) : apSum altTwo 2 n = (n : ℤ) := by
+  -- Every sampled index is of the form `(i+1)*2`, hence even.
+  simp [apSum, altTwo]
+
+/-- Same sanity check at the `discOffset` level.
+
+Checklist item: Problems/erdos_discrepancy.md (Track B) —
+“Constant/periodic sequence sanity checks: explicit computed examples for `apSum`/`discOffset`”.
+-/
+lemma discOffset_altTwo_step_two (m n : ℕ) : discOffset altTwo 2 m n = n := by
+  -- Every sampled index is even, so the sum is `n` and its absolute value is `n`.
+  simp [discOffset, apSumOffset, altTwo]
 end MoltResearch
