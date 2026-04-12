@@ -78,6 +78,16 @@ jobs:
             fi
           fi
 
+
+      - name: Validate task metadata
+        run: python3 scripts/validate_task_metadata.py
+
+      - name: Recommender smoke check
+        run: python3 scripts/next_task_recommender.py --top 1 > /dev/null
+
+      - name: Dashboard smoke check
+        run: python3 scripts/learning_dashboard.py > /dev/null
+
       - uses: leanprover/lean-action@v1
         with:
           build: true
