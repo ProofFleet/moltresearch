@@ -55,7 +55,8 @@ section
       -- `k ≤ k + q*(n+1)`.
       have hk : k ≤ k + q * (n + 1) := Nat.le_add_right _ _
       -- Apply the range-cut triangle inequality and simplify the tail length.
-      simpa [Nat.add_sub_cancel_left, Nat.add_assoc, Nat.add_left_comm, Nat.add_comm] using
+      simpa [Nat.add_sub_cancel_left, Nat.add_assoc, Nat.add_left_comm, Nat.add_comm,
+        Nat.mul_assoc, Nat.mul_left_comm, Nat.mul_comm] using
         (discOffset_cut_le (f := fun t => f (a + t)) (d := d) (m := m)
           (n := k + q * (n + 1)) (k := k) hk)
 
@@ -75,7 +76,7 @@ section
       Int.natAbs
           ((Finset.Icc (m + 1) (m + (k + q * (n + 1)))).sum (fun i => f (a + i * d)))
           = discOffset (fun t => f (a + t)) d m (k + q * (n + 1)) := by
-              simpa [hnorm]
+              exact hnorm
       _ ≤ discOffset (fun t => f (a + t)) d m k +
             discOffset (fun t => f (a + t)) d (m + k) (q * (n + 1)) := hcut
       _ ≤ discOffset (fun t => f (a + t)) d m k +
