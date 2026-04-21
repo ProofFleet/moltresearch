@@ -1412,6 +1412,14 @@ example (q : ℕ) (hq : q > 0) :
   simpa using
     (apSum_mul_len_succ_eq_sum_range (f := f) (d := d) (q := q) (n := n) hq)
 
+-- Regression (Track B / residue-class split, homogeneous nucleus / disc inequality wrapper):
+example (q : ℕ) (hq : q > 0) :
+    disc f d (q * (n + 1)) ≤
+      (Finset.range q).sum (fun r =>
+        Int.natAbs (f ((r + 1) * d) + apSumFrom f ((r + 1) * d) (q * d) n)) := by
+  simpa using
+    (disc_mul_len_succ_le_sum_range_natAbs (f := f) (d := d) (q := q) (n := n) hq)
+
 -- Regression (Track B / residue-class split, homogeneous nucleus / mul_left variant):
 -- same normal form, but with the multiplication order normalized to `d * i`.
 example (q : ℕ) (hq : q > 0) :

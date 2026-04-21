@@ -714,6 +714,37 @@ lemma discOffset_mul_len_succ_le_sum_range_natAbs (f : ℕ → ℤ) (d m q n : �
 
 
 /-!
+## Homogeneous residue-class splitting (`apSum` / `disc`)
+
+These are the `m = 0` specializations of the offset lemmas above.
+
+Checklist item: Problems/erdos_discrepancy.md (Track B) — Residue split (equality) for homogeneous `apSum`.
+-/
+
+/-- Residue-class split normal form for `disc` (homogeneous discrepancy) at a block length `q*(n+1)`.
+
+This is `discOffset_mul_len_succ_eq_natAbs_sum_range` specialized to start index `m = 0`.
+-/
+lemma disc_mul_len_succ_eq_natAbs_sum_range (f : ℕ → ℤ) (d q n : ℕ) (hq : q > 0) :
+    disc f d (q * (n + 1)) =
+      Int.natAbs ((Finset.range q).sum (fun r =>
+        f ((r + 1) * d) + apSumFrom f ((r + 1) * d) (q * d) n)) := by
+  simpa using
+    (discOffset_mul_len_succ_eq_natAbs_sum_range (f := f) (d := d) (m := 0) (q := q) (n := n) hq)
+
+/-- Triangle-inequality bound for the residue-class split normal form of `disc`.
+
+Checklist item: Problems/erdos_discrepancy.md (Track B) — Residue-class split (disc-level inequality), homogeneous case.
+-/
+lemma disc_mul_len_succ_le_sum_range_natAbs (f : ℕ → ℤ) (d q n : ℕ) (hq : q > 0) :
+    disc f d (q * (n + 1)) ≤
+      (Finset.range q).sum (fun r =>
+        Int.natAbs (f ((r + 1) * d) + apSumFrom f ((r + 1) * d) (q * d) n)) := by
+  simpa using
+    (discOffset_mul_len_succ_le_sum_range_natAbs (f := f) (d := d) (m := 0) (q := q) (n := n) hq)
+
+
+/-!
 ### Track B: affine/Icc → discOffset → residue-class bound wrapper
 
 Checklist item: Problems/erdos_discrepancy.md (Track B) —
